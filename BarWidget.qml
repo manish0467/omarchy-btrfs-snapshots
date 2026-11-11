@@ -44,17 +44,37 @@ BarWidget {
     return root.glyphs[root.overall] || root.glyphs["unknown"]
   }
 
-  // Label next to the glyph: "5 · 2h" (count and newest-snapshot age).
+  // Label next to the glyph: "5·18h" (count and newest-snapshot age).
+  // Hidden on vertical bars: the fixed-height slot cannot fit a text label
+  // there (same convention as the media widget).
   readonly property string label: {
     if (!panelLoader.item || countMode === "none") return ""
     if (root.overall === "unknown" || root.overall === "unavailable") return ""
+    if (root.vertical) return ""
     var parts = []
     if (countMode === "both" || countMode === "count") parts.push(String(root.total))
     if ((countMode === "both" || countMode === "age") && root.age !== "")
       parts.push(root.age)
     var espMark = root.espDegraded ? "!" : ""
-    return parts.join(" · ") + espMark
+    return parts.join("·") + espMark
   }
+
+  // The label must widen the button: BarIconButton fixes its width to one
+  // status slot and draws label + glyph from the slot's centre, so a label
+  // wider than the slot bleeds over the neighbouring widgets. Measure the
+  // label with a hidden Text using the very font BarIconButton's label uses
+  // (it positions with label.implicitWidth too), and grow the slot to fit.
+  // (FontMetrics cannot do this: it has no `text` property in Qt 6.)
+  Text {
+    id: labelMeasure
+    visible: false
+    textFormat: Text.PlainText
+    text: root.label
+    font.family: button.fontFamily
+    font.pixelSize: Style.bar.iconFont
+  }
+  readonly property real labelExtra:
+    root.label !== "" ? labelMeasure.implicitWidth + Style.space(4) : 0
 
   // Hidden only when everything is fine and the user asked for that. Stale,
   // low disk, ESP warning and unavailable keep the widget visible.
@@ -103,7 +123,11 @@ BarWidget {
     bar: root.bar
     text: root.glyph
     labelText: root.label
-    slotSize: Style.bar.statusSlot
+    // Widen the fixed slot by the measured label so label + glyph stay
+    // inside the button (see labelExtra above). Vertical bars keep the
+    // default slot: their label is hidden anyway.
+    slotSize: root.vertical ? Style.bar.statusSlot
+                            : Style.bar.statusSlot + root.labelExtra
     // "Active" colours the icon with the urgent colour: lowdisk and
     // unavailable only. Stale stays mild (feedback E).
     active: root.overall === "lowdisk" || root.overall === "unavailable"

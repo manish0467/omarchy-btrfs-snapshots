@@ -3,6 +3,14 @@
 All notable changes to this project are documented in this file.
 The format is based on Keep a Changelog; versioning is SemVer.
 
+## [Unreleased]
+
+### Fixed
+- The bar button's count/age label ("5·18h") overflowed the fixed width of
+  one status slot, so the label, glyph and the neighbouring widgets drew on
+  top of each other. The button now measures its label and widens itself to
+  fit (labels are hidden on vertical bars, as the shell's media widget does).
+
 ## [0.1.0] - 2026-11-11
 
 Initial release.
