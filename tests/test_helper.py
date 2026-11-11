@@ -403,6 +403,15 @@ class CliTests(unittest.TestCase):
     def test_show_config_column_only_multi_config(self):
         self.assertFalse(self.run_mock("normal")["show_config_column"])
 
+    def test_mock_state_dir_is_isolated_from_real_cache(self):
+        # A real tier-B denial cached in the default state dir must not leak
+        # into mock runs (regression: the 'full' scenario showed tier A only).
+        real_state = tempfile.mkdtemp()
+        run_cli("--state-dir", real_state, "--mock", "denied", "check")
+        doc = run_cli("--state-dir", real_state, "--mock", "full", "check")
+        self.assertEqual(doc["tiers"]["snapper_full"], "ok")
+        self.assertEqual(doc["counts"]["total"], 4)
+
     def test_state_file_written_and_privacy_safe(self):
         state_dir = tempfile.mkdtemp()
         run_cli("--state-dir", state_dir, "--mock", "normal", "check")
@@ -423,12 +432,14 @@ class CliTests(unittest.TestCase):
                 self.assertEqual(bs.main(argv), 2, argv)
 
     def test_busy_doc_when_locked(self):
-        state_dir = Path(tempfile.mkdtemp())
+        root = Path(tempfile.mkdtemp())
+        state_dir = root / "mock-normal"  # helper isolates mocks under --state-dir
+        state_dir.mkdir(parents=True)
         lock_path = state_dir / "lock"
         with open(lock_path, "w") as fh:
             import fcntl
             fcntl.flock(fh, fcntl.LOCK_EX)
-            doc = run_cli("--state-dir", str(state_dir), "--mock", "normal", "check")
+            doc = run_cli("--state-dir", str(root), "--mock", "normal", "check")
             self.assertTrue(doc["busy"])
             self.assertEqual(doc["state"], "unknown")
 

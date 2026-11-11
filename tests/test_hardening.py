@@ -190,7 +190,9 @@ class StateTests(unittest.TestCase):
     def test_state_dir_only_known_keys(self):
         state_dir = tempfile.mkdtemp()
         run_cli("--state-dir", state_dir, "--mock", "normal", "check")
-        doc = json.loads((Path(state_dir) / "state.json").read_text())
+        # mocks write into an isolated subdir, never the given state dir root
+        self.assertEqual(list(Path(state_dir).iterdir()), [Path(state_dir) / "mock-normal"])
+        doc = json.loads((Path(state_dir) / "mock-normal" / "state.json").read_text())
         self.assertEqual(set(doc.keys()), {"schema", "tier_b"})
 
 

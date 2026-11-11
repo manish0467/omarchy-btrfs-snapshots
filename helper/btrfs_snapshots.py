@@ -938,6 +938,11 @@ def main(argv=None):
     except ValueError:
         return usage_error("invalid --config JSON")
 
+    if mock_name:
+        # Mocks must never read or write the real cache: a real tier-B denial
+        # cached earlier would otherwise leak into mock scenarios (and vice
+        # versa). Isolated subdir, still under --state-dir when given.
+        state_dir = Path(state_dir) / ("mock-" + mock_name)
     try:
         ctx = Context(state_dir, cfg, mock_name, force)
     except ValueError as exc:

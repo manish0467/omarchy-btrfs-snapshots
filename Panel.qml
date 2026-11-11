@@ -536,7 +536,7 @@ Panel {
         ListView {
           id: list
           width: parent.width
-          height: Math.min(contentHeight, Style.space(420))
+          height: Math.min(contentHeight, Style.space(300))
           clip: true
           model: root.rows
           boundsBehavior: Flickable.StopAtBounds
@@ -549,8 +549,9 @@ Panel {
             required property int index
             width: ListView.view.width
             readonly property bool selected: index === root.cursor
-            readonly property bool isSnap: modelData.kind === "snap"
+            readonly property bool isSnap: modelData !== undefined && modelData.kind === "snap"
             height: isSnap ? snapBox.implicitHeight + Style.space(10)
+                  : modelData === undefined ? 0
                   : modelData.kind === "header" ? Style.space(26)
                   : modelData.kind === "fs" ? Style.space(24)
                   : noteText.implicitHeight + Style.space(6)
@@ -642,9 +643,11 @@ Panel {
                   width: parent.width
                   elide: Text.ElideRight
                   // Untrusted description -> plain text, never markup.
+                  // Guards: bindings evaluate for every row kind, and
+                  // modelData can be transiently undefined during rebuilds.
                   text: {
-                    var s = row.modelData.snap
-                    var head = "#" + s.number
+                    var s = (row.modelData && row.modelData.snap) || {}
+                    var head = "#" + (s.number === undefined ? "?" : s.number)
                     if (s.description) head += "  " + s.description
                     return head
                   }
@@ -657,7 +660,7 @@ Panel {
                   width: parent.width
                   elide: Text.ElideRight
                   text: {
-                    var s = row.modelData.snap
+                    var s = (row.modelData && row.modelData.snap) || {}
                     var when = s.date_epoch ? Qt.formatDateTime(new Date(s.date_epoch * 1000), "d MMM yyyy, hh:mm")
                                             : (s.date_raw || "date unknown")
                     var badges = []
