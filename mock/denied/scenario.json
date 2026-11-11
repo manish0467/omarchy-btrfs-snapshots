@@ -1,0 +1,29 @@
+{
+  "config_files": {
+    "root": "# Synthetic example snapper config (structure only)\nSUBVOLUME=\"/\"\nFSTYPE=\"btrfs\"\n\nNUMBER_CLEANUP=\"yes\"\nNUMBER_MIN_AGE=\"0\"\nNUMBER_LIMIT=\"5\"\nNUMBER_LIMIT_IMPORTANT=\"5\"\n\nTIMELINE_CREATE=\"no\"\n"
+  },
+  "configs": [
+    {
+      "name": "root",
+      "subvolume": "/"
+    }
+  ],
+  "esp": {
+    "avail": 1731182592,
+    "limit_percent": 85,
+    "path": "/boot",
+    "percent_used": 19.2,
+    "size": 2143281152,
+    "used": 412098560
+  },
+  "fs": {
+    "avail": 193000000000,
+    "path": "/",
+    "percent_used": 62.3,
+    "size": 512000000000,
+    "type": "btrfs",
+    "used": 319000000000
+  },
+  "name": "denied",
+  "tier_b": "denied"
+}

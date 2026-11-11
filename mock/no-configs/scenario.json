@@ -1,0 +1,22 @@
+{
+  "configs": [],
+  "configs_error": "snapper is installed but has no configs",
+  "esp": {
+    "avail": 1731182592,
+    "limit_percent": 85,
+    "path": "/boot",
+    "percent_used": 19.2,
+    "size": 2143281152,
+    "used": 412098560
+  },
+  "fs": {
+    "avail": 193000000000,
+    "path": "/",
+    "percent_used": 62.3,
+    "size": 512000000000,
+    "type": "btrfs",
+    "used": 319000000000
+  },
+  "name": "no-configs",
+  "tier_b": "no-configs"
+}
