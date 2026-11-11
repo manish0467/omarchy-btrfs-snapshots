@@ -1,0 +1,14 @@
+{
+  "_comment": "Example of the widget entry in ~/.config/omarchy/shell.json (inside bar.layout.<section>). Every key except \"id\" is optional; the values shown are the defaults. Remove this _comment line.",
+  "id": "io.github.manish0467.btrfs-snapshots",
+
+  "showCount": "both",
+  "idleBehavior": "dim",
+
+  "staleDays": 7,
+  "diskWarnPercent": 90,
+  "espWarnPercent": 0,
+
+  "pollMinutes": 30,
+  "mock": ""
+}

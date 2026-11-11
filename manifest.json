@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.manish0467.btrfs-snapshots",
+  "name": "Btrfs Snapshots",
+  "version": "0.1.0",
+  "author": "Manish",
+  "license": "MIT",
+  "description": "Btrfs snapshot overview (count, age, list) with a one-click pre-change snapshot via Omarchy's own omarchy-snapshot. Read-only: it never deletes, restores or cleans up.",
+  "repository": "https://github.com/manish0467/omarchy-btrfs-snapshots",
+  "homepage": "https://github.com/manish0467/omarchy-btrfs-snapshots",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Btrfs Snapshots",
+    "description": "Snapshot count, age and list, disk usage warnings, and a confirmed one-click snapshot via omarchy-snapshot",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
