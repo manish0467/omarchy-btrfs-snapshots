@@ -159,8 +159,8 @@ def fetch_configs(ctx):
     `list-configs --jsonout` is a usage error (tested on snapper 0.13.2)."""
     if ctx.mock:
         return ctx.mock.list_configs()  # already (configs, error)
-    out, err, kind, code = run_cmd(["snapper", "--jsonout", "list-configs"],
-                                   SNAPPER_TIMEOUT)
+    out, err, kind, _code = run_cmd(["snapper", "--jsonout", "list-configs"],
+                                    SNAPPER_TIMEOUT)
     if kind == "missing":
         return None, "snapper is not installed"
     if kind == "timeout":
@@ -843,7 +843,6 @@ def build_doc(ctx):
                                esp.get("warn_percent", 100)), 200)})
 
     # --- creation info (constant command + retention warning) ----------
-    count_known = bool(tier_b_rows) or bool(tier_a_rows)
     count = len(tier_b_rows) if tier_b_rows else (len(tier_a_rows) if tier_a_rows else None)
     oldest = snapshots[-1]["number"] if snapshots else None
     doc["creation"]["retention_lines"] = retention_lines(
